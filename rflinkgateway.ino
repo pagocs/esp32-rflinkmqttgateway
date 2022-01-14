@@ -1009,7 +1009,6 @@ void setup() {
 #else
     MQTTConnect( MQTT_BROKER , MQTT_PORT , esp32devicename , MQTT_USER , MQTT_PSW );
 #endif
-    Serial.printf("Step 1\n");
 
     // Send a Welcome message just for fun
     String message = "Hello from " + String(esp32devicename);
@@ -1021,7 +1020,7 @@ void setup() {
     MQTTSubscribe( "wol" , mqttwoltopic );
 
     // Init RFLink connection
-    Serial.println( "Serial init..." );
+    rprintf( "Serial init..." );
     rflinkinit();
     rprintf("Reboot rflink..\n");
     rflinksend( "10;REBOOT;\n");
