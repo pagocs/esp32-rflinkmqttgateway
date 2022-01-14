@@ -99,4 +99,4 @@ For use this gateway with Domoticz you should setup a "RFLink Gateway MQTT" devi
 * Username and password: he credential for MQTT broker
 * CA Filename and TLS version: parameters for secure connection, but this was not tested by me yet.
 
-<img src="https://github.com/pagocs/esp32-rflinkmqttgateway/blob/main/assets/images/domoticz_settings.jpg" width="300" height="560">
+<img src="https://github.com/pagocs/esp32-rflinkmqttgateway/blob/main/assets/images/domoticz_settings.jpg" width="596" height="409">
