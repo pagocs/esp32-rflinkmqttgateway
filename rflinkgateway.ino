@@ -49,7 +49,6 @@ HardwareSerial rflink(1); // use uart1
 // Syslog is optional. If you do not define the server it is not compile to
 // the project
 #ifdef SYSLOG_SERVER
-
 #include <Syslog.h>
 // This device info
 #define DEVICE_HOSTNAME "ESP32 RFLINK MQTT"
@@ -249,7 +248,7 @@ bool rflinkfilterdevice( char * packet )
 }
 
 //------------------------------------------------------------------------------
-// HAndling the raw packet data received via serial link
+// Handling the raw packet data received via serial link
 
 bool rflinkreadline( String & out )
 {
@@ -267,7 +266,7 @@ bool rflinkreadline( String & out )
             serialbuffpos += available;
             rflinkbuffoverflow = true;
         }
-        // for( int i=0 ; i < available ; i++ )
+
         while( rflink.available() )
         {
             c = rflink.read();
@@ -795,7 +794,7 @@ bool _mqttrflinkouttopic(char* topic, uint8_t * payload, unsigned int length)
     return true;
 }
 
-// HAndling the a controller specific commands
+// Handling the a controller specific commands
 // FIXME:
 // Create the controller topic for
 // sending commands to the gateway
@@ -880,7 +879,7 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
 }
 
 //------------------------------------------------------------------------------
-// HAndling the received packet
+// Handling the received packet
 
 void processmessage( String & message )
 {

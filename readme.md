@@ -72,7 +72,6 @@ dependencies:
 * Standard Arduino/ESP32 modules
 
 ## Before you can compile
-
 * Connect the serial USB converter to your machine and the ESP32 board
 * Select the USB port
 * Setup the board type to WEMOS Lolin32 and partiton scheme could be default.
@@ -95,7 +94,7 @@ flood your device database in Domoticz system.
 For use this gateway with Domoticz you should setup a "RFLink Gateway MQTT" device on your hardware tab.
 
 ## Parameters
-* Remote server: it contains the MQTT broker IP address (or adresses if you heve "backup" broker, in tthis case you should separate the addresses with semivolon look like this: 192.168.0.111;192.168.0.222)
+* Remote server: it contains the MQTT broker IP address (or addresses if you heve "backup" broker, in this case you should separate the addresses with semicolon look like this: 192.168.0.111;192.168.0.222)
 * Port: MQTT broker port, default is 1883
 * Username and password: he credential for MQTT broker
 * CA Filename and TLS version: parameters for secure connection, but this was not tested by me yet.
