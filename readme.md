@@ -1,7 +1,5 @@
 # Notice
-For use this gateway with Domoticz it should contains the RFLINK MQTT gateway device
-WHICH IS NOT YET A PART OF the official Domoticz version (<https://github.com/domoticz/domoticz/pull/5112>) but it is under progress,
-that was the reason why this project is raised to public anyway... :)
+For use this gateway with Domoticz it should contains the RFLINK MQTT gateway device WHICH IS currently just on the development branch, so if you want to use you should compile to yourself.
 
 # Summary
 This project is implement an MQTT based network interface for the great
