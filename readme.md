@@ -74,7 +74,7 @@ dependencies:
 * Select the USB port
 * Setup the board type to WEMOS Lolin32 and partiton scheme could be default.
 * Setup the upload speed based on your experience but you can use 921600 bravely
-* Setup the connection parameters in the rflinkgateway.ino source file
+* Setup the connection parameters in the yoursettings.h source file
     * WIFI
         * MY_WIFI_AP "ap"
         * MY_WIFI_PSW "password"
@@ -85,11 +85,11 @@ dependencies:
         * MQTT_USER "user"
         * MQTT_PSW "password"
 
-Optionally you can define device type names which will be filtered out and do not
+Optionally you can define device type names (see tthe deviceignorelist array) which will be filtered out and do not
 flood your device database in Domoticz system.
 
 # How to use it
-For use this gateway with Domoticz you should setup a "RFLink Gateway MQTT" device on your hardware tab.
+You should setup a "RFLink Gateway MQTT" device on under Domoticz hardware tab.
 
 ## Parameters
 * Remote server: it contains the MQTT broker IP address (or addresses if you heve "backup" broker, in this case you should separate the addresses with semicolon look like this: 192.168.0.111;192.168.0.222)
