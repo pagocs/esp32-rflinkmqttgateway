@@ -8,7 +8,7 @@
 
 //------------------------------------------------------------------------------
 
-#include <ESP.h>
+#include <Esp.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <string.h>
@@ -20,8 +20,8 @@
 
 #include <utils.h>
 #include <ota.h>
-#include <ledblink.H>
-#include <wificonnect.H>
+#include <ledblink.h>
+#include <wificonnect.h>
 #include <mqtt.h>
 #include <wol.h>
 
