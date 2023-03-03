@@ -60,9 +60,10 @@ const char * deviceignorelist[] = {
      "Mertik_GV60" , "SelectPlus" , "Avidsen" ,
      "TRC02RGB", // RFLink Gateway	00FFFFFF	255	TRC02RGB	Color Switch	RGBW
      "Warema" , "Drayton", "Keeloq" ,
-     "Mebus" , "Xiron" ,
+     "Mebus" , "Xiron" , "Tunex" ,
      "V2Phoenix" , "Conrad RSL" , "LaCrosse TX3",
-     "Auriol V2",
+     "Auriol V2", "Renkforce E_TA", "Unknown",
+     "FA500" , "Deltronic"
 
      NULL
 };
