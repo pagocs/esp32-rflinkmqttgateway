@@ -1,6 +1,3 @@
-# Notice
-For use this gateway with Domoticz it should contains the RFLINK MQTT gateway device which is currently just on the development branch, so if you want to use you should compile to yourself.
-
 # Summary
 This project is implement an MQTT based network interface for the great
 RFLINK Gateway <https://www.rflink.nl> to ensure an independent installation
@@ -68,6 +65,8 @@ dependencies:
 * ArduinoJson 5.13.5    <https://arduinojson.org>
 * PubSubClient 2.8.0    <https://github.com/knolleary/pubsubclient>
 * Standard Arduino/ESP32 modules
+    * ...
+    *  CRC32 https://github.com/arduino-libraries/Arduino_CRC32
 
 ## Before you can compile
 * Connect the serial USB converter to your machine and the ESP32 board
@@ -96,5 +95,6 @@ You should setup a "RFLink Gateway MQTT" device on under Domoticz hardware tab.
 * Port: MQTT broker port, default is 1883
 * Username and password: he credential for MQTT broker
 * CA Filename and TLS version: parameters for secure connection, but this was not tested by me yet.
+* Multi Node Sync: If you would like to use this gateway in a multi Domoticz environment you can enable this options which is enable the sync back options and in this case your RFLink switch commands will be synced between the Domoticz nodes over MQTT.
 
 <img src="https://github.com/pagocs/esp32-rflinkmqttgateway/blob/main/assets/images/domoticz_settings.jpg" width="596" height="409">
