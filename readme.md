@@ -38,7 +38,9 @@ network using linux nc command (for example: nc 192.168.0.42 80) or a browser wi
 using the board ip address.
 
 ## MQTT broker
-Yo can use the gateway with static broker what you should define in compile time. An another way the automatic discover. For this you need to setup a mosquitto broker with discoverable over mDNS.
+Yo can use the gateway with static broker what you should define in compile time.
+
+An another way the automatic discover. For this you need to setup a mosquitto broker with discoverable via mDNS.
 
 On linux based systems you should setup:
 * The mosquitto broker
