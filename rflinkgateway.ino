@@ -504,17 +504,19 @@ void rflinkmasterbroadcast( void )
     // call in some lines below
     if( rflinkmastermode )
     {
-        StaticJsonBuffer<200> jsonBuffer;
+        // StaticJsonDocument<200> jsonBuffer;
+        StaticJsonDocument<200> root;
         String topic;
         String payload;
 
         topic = String(MQTT_CONTROLLERCOMMANDS);
-        JsonObject& root = jsonBuffer.createObject();
+        // JsonObject root = jsonBuffer.createObject();
         root["command"] = "mqttproxystatus";
         root["value"] = "master";
         root["ip"] = WiFi.localIP().toString();
         root["name"] = esp32devicename;
-        root.printTo( payload );
+        // root.printTo( payload );
+        serializeJson( root , payload );
         // payload.replace( "\\r\\n" , "" );
         MQTTPublish( topic , payload );
         rfbroadcast = millis();
@@ -544,16 +546,18 @@ void rflinkmasterbroadcast( void )
             }
             else
             {
-                StaticJsonBuffer<200> jsonBuffer;
+                // StaticJsonDocument<200> jsonBuffer;
+                StaticJsonDocument<200> root;
                 String topic;
                 String payload;
                 // Send discover request
                 topic = String(MQTT_CONTROLLERCOMMANDS);
-                JsonObject& root = jsonBuffer.createObject();
+                // JsonObject root = jsonBuffer.createObject();
                 root["command"] = "discovermqttproxy";
                 root["ip"] = WiFi.localIP().toString();
                 root["name"] = esp32devicename;
-                root.printTo( payload );
+                // root.printTo( payload );
+                serializeJson( root , payload );
                 // payload.replace( "\\r\\n" , "" );
                 MQTTPublish( topic , payload );
                 broadcastsent = millis();
@@ -574,9 +578,15 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
     // if( MQTTtopicmatch( topic , RFLINK_RECEIVE_TOPIC ) )
     {
         rprintf(">>> Message arrived [%s]: \n" , payload );
-        StaticJsonBuffer<255> json;
-        JsonObject& root = json.parseObject((const char*)payload);
-        if( root.success() )
+
+        // StaticJsonDocument<255> json;
+        // JsonObject root = json.parseObject((const char*)payload);
+        // if( root.success() )
+        
+        StaticJsonDocument<255> root;
+        DeserializationError err = deserializeJson(root, (const char*)payload);
+    
+        if( err == DeserializationError::Ok )
         {
 #ifdef MULTIGATEWAY
             if( root["command"].as<String>() == "mqttproxystatus" )
@@ -606,11 +616,15 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
 
 void mqttwoltopic(char* topic, uint8_t * payload, unsigned int length)
 {
-    StaticJsonBuffer<256> json;
-
+    // StaticJsonDocument<256> json;
     rprintf( "%s: >>> WOL command: %s\n", timeClient.getFormattedTime().c_str() , (const char*)payload );
-    JsonObject& root = json.parseObject((const char*)payload);
-    if( root.success() && root.containsKey("mac") )
+    // JsonObject root = json.parseObject((const char*)payload);
+    // if( root.success() && root.containsKey("mac") )
+
+    StaticJsonDocument<256> root;
+    DeserializationError err = deserializeJson(root, (const char*)payload);
+
+    if( err == DeserializationError::Ok && root.containsKey("mac") )
     {
         WOL target;
         target.wol( root["mac"].as<const char *>() );
@@ -814,9 +828,12 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
 
     DEBUG_PRINTF( "Controller topic received...\n");
 
-    StaticJsonBuffer<255> json;
-    JsonObject& root = json.parseObject((const char*)payload);
-    if( root.success() )
+    // StaticJsonDocument<255> json;
+    // JsonObject root = json.parseObject((const char*)payload);
+    // if( root.success() )
+    StaticJsonDocument<255> root;
+    DeserializationError err = deserializeJson(root, (const char*)payload);
+    if( err == DeserializationError::Ok )
     {
         // Filter our own messages
         if( root.containsKey("name") &&
