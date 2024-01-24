@@ -45,7 +45,7 @@ OTA Update
 #define MQTT_USER "admin"
 #define MQTT_PSW "admin1234"
 
-#define VERSION "Ver: 1.1.8"
+#define VERSION "Ver: 1.2.8"
 
 // This define is enable the multi gateway mode
 #define MULTIGATEWAY
