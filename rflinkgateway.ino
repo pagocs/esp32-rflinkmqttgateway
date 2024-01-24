@@ -25,10 +25,6 @@
 #include <mqtt.h>
 #include <wol.h>
 
-#ifndef DEBUG_PRINTF
-#define DEBUG_PRINTF(f_, ...) Serial.printf((f_), ##__VA_ARGS__)
-//#define DEBUG_PRINTF(f_, ...)
-#endif //DEBUG_PRINTF
 #ifndef DEBUG_MODE
 #define DEBUG_MODE() false
 #endif // DEBUG_PRINTF
@@ -42,7 +38,6 @@
 #define PIN_SERIAL_RX  16
 #define PIN_SERIAL_TX  17
 // https://stackoverflow.com/questions/49212371/serial-communication-between-two-esp32
-//HardwareSerial rflink(2); // use uart2
 HardwareSerial rflink(1); // use uart1
 
 //------------------------------------------------------------------------------
@@ -157,6 +152,8 @@ void rflinkreset( void )
     rflink.end();
     rflinkinit();
     rflastreset = millis();
+    
+
 }
 
 unsigned long rflinklastreset()
@@ -644,12 +641,12 @@ void mqttrflinkouttopic(char* topic, uint8_t * payload, unsigned int length)
     }
 #endif // MULTIGATEWAY
 
+    RFLINKqueueitem * message = new RFLINKqueueitem( (const char *)topic , (const char *)payload );
+
     if( mutex_rflinkqueue != NULL )
     {
         xSemaphoreTakeRecursive( mutex_rflinkqueue, portMAX_DELAY );
     }
-
-    RFLINKqueueitem * message = new RFLINKqueueitem( (const char *)topic , (const char *)payload );
     // Add topic to list
     RFLINKqueue.push_back( message );
 
@@ -777,6 +774,8 @@ bool _mqttrflinkouttopic(char* topic, uint8_t * payload, unsigned int length)
     // }
 
     // Post back the command in the in channel to sync with other hosts
+    // if SYNCID is presented
+    // 20;00;NewKaku;ID=26327fe;SWITCH=e;CMD=ON;SYNCID=76b14a68;
     char *params[MAX_RFPACKET_FIELDS];
     if( syncback == true &&
         rflinksplitpacket( payloadstr , ";", params , MAX_RFPACKET_FIELDS , &len ) == MAX_RFPACKET_FIELDS &&
