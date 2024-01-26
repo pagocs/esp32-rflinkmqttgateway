@@ -504,18 +504,15 @@ void rflinkmasterbroadcast( void )
     // call in some lines below
     if( rflinkmastermode )
     {
-        // StaticJsonDocument<200> jsonBuffer;
-        StaticJsonDocument<200> root;
+        JsonDocument    root;
         String topic;
         String payload;
 
         topic = String(MQTT_CONTROLLERCOMMANDS);
-        // JsonObject root = jsonBuffer.createObject();
         root["command"] = "mqttproxystatus";
         root["value"] = "master";
         root["ip"] = WiFi.localIP().toString();
         root["name"] = esp32devicename;
-        // root.printTo( payload );
         serializeJson( root , payload );
         // payload.replace( "\\r\\n" , "" );
         MQTTPublish( topic , payload );
@@ -546,17 +543,14 @@ void rflinkmasterbroadcast( void )
             }
             else
             {
-                // StaticJsonDocument<200> jsonBuffer;
-                StaticJsonDocument<200> root;
+                JsonDocument    root;
                 String topic;
                 String payload;
                 // Send discover request
                 topic = String(MQTT_CONTROLLERCOMMANDS);
-                // JsonObject root = jsonBuffer.createObject();
                 root["command"] = "discovermqttproxy";
                 root["ip"] = WiFi.localIP().toString();
                 root["name"] = esp32devicename;
-                // root.printTo( payload );
                 serializeJson( root , payload );
                 // payload.replace( "\\r\\n" , "" );
                 MQTTPublish( topic , payload );
@@ -579,11 +573,7 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
     {
         rprintf(">>> Message arrived [%s]: \n" , payload );
 
-        // StaticJsonDocument<255> json;
-        // JsonObject root = json.parseObject((const char*)payload);
-        // if( root.success() )
-        
-        StaticJsonDocument<255> root;
+        JsonDocument    root;
         DeserializationError err = deserializeJson(root, (const char*)payload);
     
         if( err == DeserializationError::Ok )
@@ -616,12 +606,9 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
 
 void mqttwoltopic(char* topic, uint8_t * payload, unsigned int length)
 {
-    // StaticJsonDocument<256> json;
     rprintf( "%s: >>> WOL command: %s\n", timeClient.getFormattedTime().c_str() , (const char*)payload );
-    // JsonObject root = json.parseObject((const char*)payload);
-    // if( root.success() && root.containsKey("mac") )
 
-    StaticJsonDocument<256> root;
+    JsonDocument    root;
     DeserializationError err = deserializeJson(root, (const char*)payload);
 
     if( err == DeserializationError::Ok && root.containsKey("mac") )
@@ -828,10 +815,7 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
 
     DEBUG_PRINTF( "Controller topic received...\n");
 
-    // StaticJsonDocument<255> json;
-    // JsonObject root = json.parseObject((const char*)payload);
-    // if( root.success() )
-    StaticJsonDocument<255> root;
+    JsonDocument    root;
     DeserializationError err = deserializeJson(root, (const char*)payload);
     if( err == DeserializationError::Ok )
     {
