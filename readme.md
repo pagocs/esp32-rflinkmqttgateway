@@ -38,7 +38,9 @@ network using linux nc command (for example: nc 192.168.0.42 80) or a browser wi
 using the board ip address.
 
 ## MQTT broker
-Yo can use the gateway with static broker what you should define in compile time. An another way the automatic discover. For this you need to setup a mosquitto broker with discoverable over mDNS.
+Yo can use the gateway with static broker what you should define in compile time.
+
+An another way the automatic discover. For this you need to setup a mosquitto broker with discoverable via mDNS.
 
 On linux based systems you should setup:
 * The mosquitto broker
@@ -62,7 +64,7 @@ dependencies:
 * Arduino ESP32 support <https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html>
 * Common modules        <https://github.com/pagocs/esp32-common>
                           You should copy this modules into a folder in your arduino library folder
-* ArduinoJson 5.13.5    <https://arduinojson.org>
+* ArduinoJson 7.0.2    <https://arduinojson.org>
 * PubSubClient 2.8.0    <https://github.com/knolleary/pubsubclient>
 * Standard Arduino/ESP32 modules
     * ...

@@ -27,7 +27,7 @@
 #define MQTT_USER "user"
 #define MQTT_PSW "password"
 
-#define VERSION "Ver: 1.1.7"
+#define VERSION "Ver: 1.2.0"
 
 // This define is enable the multi gateway mode
 // #define MULTIGATEWAY

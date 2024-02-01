@@ -25,10 +25,6 @@
 #include <mqtt.h>
 #include <wol.h>
 
-#ifndef DEBUG_PRINTF
-#define DEBUG_PRINTF(f_, ...) Serial.printf((f_), ##__VA_ARGS__)
-//#define DEBUG_PRINTF(f_, ...)
-#endif //DEBUG_PRINTF
 #ifndef DEBUG_MODE
 #define DEBUG_MODE() false
 #endif // DEBUG_PRINTF
@@ -42,7 +38,6 @@
 #define PIN_SERIAL_RX  16
 #define PIN_SERIAL_TX  17
 // https://stackoverflow.com/questions/49212371/serial-communication-between-two-esp32
-//HardwareSerial rflink(2); // use uart2
 HardwareSerial rflink(1); // use uart1
 
 //------------------------------------------------------------------------------
@@ -157,6 +152,8 @@ void rflinkreset( void )
     rflink.end();
     rflinkinit();
     rflastreset = millis();
+    
+
 }
 
 unsigned long rflinklastreset()
@@ -507,17 +504,16 @@ void rflinkmasterbroadcast( void )
     // call in some lines below
     if( rflinkmastermode )
     {
-        StaticJsonBuffer<200> jsonBuffer;
+        JsonDocument    root;
         String topic;
         String payload;
 
         topic = String(MQTT_CONTROLLERCOMMANDS);
-        JsonObject& root = jsonBuffer.createObject();
         root["command"] = "mqttproxystatus";
         root["value"] = "master";
         root["ip"] = WiFi.localIP().toString();
         root["name"] = esp32devicename;
-        root.printTo( payload );
+        serializeJson( root , payload );
         // payload.replace( "\\r\\n" , "" );
         MQTTPublish( topic , payload );
         rfbroadcast = millis();
@@ -547,16 +543,15 @@ void rflinkmasterbroadcast( void )
             }
             else
             {
-                StaticJsonBuffer<200> jsonBuffer;
+                JsonDocument    root;
                 String topic;
                 String payload;
                 // Send discover request
                 topic = String(MQTT_CONTROLLERCOMMANDS);
-                JsonObject& root = jsonBuffer.createObject();
                 root["command"] = "discovermqttproxy";
                 root["ip"] = WiFi.localIP().toString();
                 root["name"] = esp32devicename;
-                root.printTo( payload );
+                serializeJson( root , payload );
                 // payload.replace( "\\r\\n" , "" );
                 MQTTPublish( topic , payload );
                 broadcastsent = millis();
@@ -577,9 +572,11 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
     // if( MQTTtopicmatch( topic , RFLINK_RECEIVE_TOPIC ) )
     {
         rprintf(">>> Message arrived [%s]: \n" , payload );
-        StaticJsonBuffer<255> json;
-        JsonObject& root = json.parseObject((const char*)payload);
-        if( root.success() )
+
+        JsonDocument    root;
+        DeserializationError err = deserializeJson(root, (const char*)payload);
+    
+        if( err == DeserializationError::Ok )
         {
 #ifdef MULTIGATEWAY
             if( root["command"].as<String>() == "mqttproxystatus" )
@@ -609,11 +606,12 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
 
 void mqttwoltopic(char* topic, uint8_t * payload, unsigned int length)
 {
-    StaticJsonBuffer<256> json;
-
     rprintf( "%s: >>> WOL command: %s\n", timeClient.getFormattedTime().c_str() , (const char*)payload );
-    JsonObject& root = json.parseObject((const char*)payload);
-    if( root.success() && root.containsKey("mac") )
+
+    JsonDocument    root;
+    DeserializationError err = deserializeJson(root, (const char*)payload);
+
+    if( err == DeserializationError::Ok && root.containsKey("mac") )
     {
         WOL target;
         target.wol( root["mac"].as<const char *>() );
@@ -644,12 +642,12 @@ void mqttrflinkouttopic(char* topic, uint8_t * payload, unsigned int length)
     }
 #endif // MULTIGATEWAY
 
+    RFLINKqueueitem * message = new RFLINKqueueitem( (const char *)topic , (const char *)payload );
+
     if( mutex_rflinkqueue != NULL )
     {
         xSemaphoreTakeRecursive( mutex_rflinkqueue, portMAX_DELAY );
     }
-
-    RFLINKqueueitem * message = new RFLINKqueueitem( (const char *)topic , (const char *)payload );
     // Add topic to list
     RFLINKqueue.push_back( message );
 
@@ -777,6 +775,8 @@ bool _mqttrflinkouttopic(char* topic, uint8_t * payload, unsigned int length)
     // }
 
     // Post back the command in the in channel to sync with other hosts
+    // if SYNCID is presented
+    // 20;00;NewKaku;ID=26327fe;SWITCH=e;CMD=ON;SYNCID=76b14a68;
     char *params[MAX_RFPACKET_FIELDS];
     if( syncback == true &&
         rflinksplitpacket( payloadstr , ";", params , MAX_RFPACKET_FIELDS , &len ) == MAX_RFPACKET_FIELDS &&
@@ -815,9 +815,9 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
 
     DEBUG_PRINTF( "Controller topic received...\n");
 
-    StaticJsonBuffer<255> json;
-    JsonObject& root = json.parseObject((const char*)payload);
-    if( root.success() )
+    JsonDocument    root;
+    DeserializationError err = deserializeJson(root, (const char*)payload);
+    if( err == DeserializationError::Ok )
     {
         // Filter our own messages
         if( root.containsKey("name") &&
