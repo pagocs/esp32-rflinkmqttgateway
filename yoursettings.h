@@ -27,7 +27,7 @@
 #define MQTT_USER "user"
 #define MQTT_PSW "password"
 
-#define VERSION "Ver: 1.2.0"
+#define VERSION "Ver: 1.3.0"
 
 // This define is enable the multi gateway mode
 // #define MULTIGATEWAY
@@ -42,6 +42,7 @@ const char * deviceignorelist[] = {
     // "Warema" , "Drayton", "Keeloq" ,
     // "Auriol V2",
 
+     // DO NOT REMOVE THIS
      NULL
 };
 

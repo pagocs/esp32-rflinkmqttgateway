@@ -581,12 +581,12 @@ void mqttcallback(char* topic, uint8_t * payload, unsigned int length)
 #ifdef MULTIGATEWAY
             if( root["command"].as<String>() == "mqttproxystatus" )
             {
-                if( root.containsKey("command") && root["value"].as<String>() == "master" )
+                if( root.["command"].is<JsonVariant>() && root["value"].as<String>() == "master" )
                 {
                     rflinkknownmaster = true;
                     rflinkmastermode = true;
                 }
-                else if( root.containsKey("command") && root["value"].as<String>() == "slave" )
+                else if( root.["command"].is<JsonVariant>() && root["value"].as<String>() == "slave" )
                 {
                     rflinkknownmaster = false;
                     rflinkmastermode = false;
@@ -611,7 +611,7 @@ void mqttwoltopic(char* topic, uint8_t * payload, unsigned int length)
     JsonDocument    root;
     DeserializationError err = deserializeJson(root, (const char*)payload);
 
-    if( err == DeserializationError::Ok && root.containsKey("mac") )
+    if( err == DeserializationError::Ok && root["mac"].is<JsonVariant>() )
     {
         WOL target;
         target.wol( root["mac"].as<const char *>() );
@@ -820,7 +820,7 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
     if( err == DeserializationError::Ok )
     {
         // Filter our own messages
-        if( root.containsKey("name") &&
+        if( root["name"].is<JsonVariant>() &&
             root["name"].as<String>() == String(esp32devicename)
         )
         {
@@ -829,7 +829,7 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
         }
 
         // Query master nodes
-        if( root.containsKey("command") )
+        if( root["command"].is<JsonVariant>() )
         {
 #ifdef MULTIGATEWAY
             if( root["command"].as<String>() == "discovermqttproxy" )
@@ -842,12 +842,12 @@ void mqttcontrollertopic(char* topic, uint8_t * payload, unsigned int length)
             }
             else if( root["command"].as<String>() == "mqttproxystatus" )
             {
-                if( root.containsKey("command") && root["value"].as<String>() == "master" )
+                if( root["command"].is<JsonVariant>() && root["value"].as<String>() == "master" )
                 {
                     String name;
 
                     rflinkknownmaster = true;
-                    if( root.containsKey("ip") )
+                    if( root["ip"].is<JsonVariant>() )
                     {
                         name = root["ip"].as<String>();
                     }
